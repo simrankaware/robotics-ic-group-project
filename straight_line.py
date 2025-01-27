@@ -83,13 +83,15 @@ try:
     #     time.sleep(1)
     #     print(time.time() - begin)
     # BP.reset_all()
-    move_in_straight_line(5)
-    rotate(90)
-    move_in_straight_line(5)
-    rotate(90)
-    move_in_straight_line(5)
-    rotate(90)
-    move_in_straight_line(5)
+
+    rotate(30)
+    time.sleep(1)
+    rotate(40)
+    time.sleep(1)
+    rotate(27)
+    time.sleep(1)
+    rotate(20)
+    move_in_straight_line(2)
     
  
 except KeyboardInterrupt: # except the program gets interrupted by Ctrl+C on the keyboard.
