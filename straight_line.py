@@ -9,14 +9,19 @@ BP = brickpi3.BrickPi3() # Create an instance of the BrickPi3 class. BP will be 
 try:
     begin = time.time()
     print(begin)
-    while time.time() - begin < 5:
+    while time.time() - begin < 15:
+        time.sleep(1)
+    print(time.time() - begin)
+    try:
+        target = BP.set_motor_power(BP.PORT_C, -45)
+    except IOError as error:
+        print(error)
+    BP.set_motor_position(BP.PORT_B, target)
+    begin = time.time()
+    while time.time() - begin < 15:
         time.sleep(1)
         print(time.time() - begin)
-        try:
-            target = BP.set_motor_power(BP.PORT_C, -45)
-        except IOError as error:
-            print(error)
-    BP.set_motor_position(BP.PORT_B, target)
+    BP.reset_all()
     begin = time.time()
     while time.time() - begin < 15:
         time.sleep(1)
