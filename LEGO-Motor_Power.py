@@ -41,7 +41,7 @@ try:
             power = 0
         BP.set_motor_power(BP.PORT_C, power)
         
-        print(("Motor A Target Degrees Per Second: %d" % target), "  Motor A Status: ", BP.get_motor_status(BP.PORT_A))
+        print(("Motor B Target Degrees Per Second: %d" % target), "  Motor B Status: ", BP.get_motor_status(BP.PORT_B))
 
         time.sleep(0.02)  # delay for 0.02 seconds (20ms) to reduce the Raspberry Pi CPU load.
 
