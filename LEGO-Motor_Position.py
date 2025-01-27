@@ -11,7 +11,7 @@
 # 
 # Hardware: Connect EV3 or NXT motors to the BrickPi3 motor ports B and C. Make sure that the BrickPi3 is running on a 9v power supply.
 #
-# Results:  When you run this program, motor B will run to match the position of motor C. Manually rotate motor C, and motor A will follow.
+# Results:  When you run this program, motor B will run to match the position of motor C. Manually rotate motor C, and motor B will follow.
 
 from __future__ import print_function # use python 3 syntax but make it compatible with python 2
 from __future__ import division       #                           ''
@@ -28,12 +28,12 @@ try:
     except IOError as error:
         print(error)
     
-    BP.set_motor_power(BP.PORT_C, BP.MOTOR_FLOAT)    # float motor D
+    # BP.set_motor_power(BP.PORT_C, BP.MOTOR_FLOAT)    # float motor C
     BP.set_motor_limits(BP.PORT_B, 50, 200)          # optionally set a power limit (in percent) and a speed limit (in Degrees Per Second)
     while True:
         # Each of the following BP.get_motor_encoder functions returns the encoder value.
         try:
-            target = BP.get_motor_encoder(BP.PORT_C) # read motor D's position
+            target = BP.get_motor_encoder(BP.PORT_C) # read motor C's position
         except IOError as error:
             print(error)
         

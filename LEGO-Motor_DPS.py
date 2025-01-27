@@ -11,7 +11,7 @@
 # 
 # Hardware: Connect EV3 or NXT motors to the BrickPi3 motor ports B and D. Make sure that the BrickPi3 is running on a 9v power supply.
 #
-# Results:  When you run this program, motor B speed will be controlled by the position of motor D. Manually rotate motor D, and motor A's speed will change.
+# Results:  When you run this program, motor B speed will be controlled by the position of motor C. Manually rotate motor C, and motor A's speed will change.
 
 from __future__ import print_function # use python 3 syntax but make it compatible with python 2
 from __future__ import division       #                           ''
