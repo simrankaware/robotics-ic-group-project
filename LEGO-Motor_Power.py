@@ -40,6 +40,8 @@ try:
             power = 0
         BP.set_motor_power(BP.PORT_C, power)
         
+        print(("Motor A Target Degrees Per Second: %d" % target), "  Motor A Status: ", BP.get_motor_status(BP.PORT_A))
+
         time.sleep(0.02)  # delay for 0.02 seconds (20ms) to reduce the Raspberry Pi CPU load.
 
 except KeyboardInterrupt: # except the program gets interrupted by Ctrl+C on the keyboard.
