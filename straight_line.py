@@ -86,10 +86,15 @@ try:
 
     rotate(30)
     time.sleep(1)
+    move_in_straight_line(5)
     rotate(40)
     time.sleep(1)
+    time.sleep(1)
+    move_in_straight_line(5)
     rotate(27)
     time.sleep(1)
+    time.sleep(1)
+    move_in_straight_line(5)
     rotate(20)
     move_in_straight_line(2)
     
