@@ -37,5 +37,6 @@ def move_in_straight_line(duration):
         BP.set_motor_power(RIGHT_MOTOR, right_power)
 
         print("Left encoder: %6d  Right encoder: %6d" % (left_encoder, right_encoder))
+        BP.reset_all()
 
         time.sleep(0.05)

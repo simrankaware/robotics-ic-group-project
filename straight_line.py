@@ -80,7 +80,7 @@ try:
     move_in_straight_line(5)
     rotate(ANGLE_CALIBRATION)
     move_in_straight_line(5)
-    
+    BP.reset_all()
     
  
 except KeyboardInterrupt: # except the program gets interrupted by Ctrl+C on the keyboard.
