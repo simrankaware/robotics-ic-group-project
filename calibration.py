@@ -13,12 +13,16 @@ RIGHT_MOTOR = BP.PORT_C
 BASE_POWER = 25
 kp = 1.5
 
-def move_in_straight_line(duration):
+def calibrate_straight_line(base_power, duration):
     BP.offset_motor_encoder(LEFT_MOTOR, BP.get_motor_encoder(LEFT_MOTOR))
     BP.offset_motor_encoder(RIGHT_MOTOR, BP.get_motor_encoder(RIGHT_MOTOR))
 
     start_time = time.time()
     print(start_time)
+
+    total_l = 0
+    total_r = 0
+    count = 0
 
     while time.time() - start_time < duration:
         left_encoder = BP.get_motor_encoder(LEFT_MOTOR)
@@ -30,13 +34,20 @@ def move_in_straight_line(duration):
         # calculating correction 
         correction = error * kp
 
-        left_power = BASE_POWER - correction
-        right_power = BASE_POWER + correction
+        left_power = base_power - correction
+        right_power = base_power + correction
 
+        total_l += left_power
+        total_r += right_power
+        count += 1
+        
         BP.set_motor_power(LEFT_MOTOR, left_power)
         BP.set_motor_power(RIGHT_MOTOR, right_power)
 
         print("Left encoder: %6d  Right encoder: %6d" % (left_encoder, right_encoder))
-        BP.reset_all()
 
         time.sleep(0.05)
+    
+    print("Average left power: ", total_l/count)
+    print("Average right power: ", total_r/count)
+    return total_l/count, total_r/count
