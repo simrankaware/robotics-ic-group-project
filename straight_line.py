@@ -43,32 +43,46 @@ def move_in_straight_line(duration):
         time.sleep(0.05) 
 
 
-
-def rotate(degrees):
-
-    # degrees = (degrees / 90) * ANGLE_CALIBRATION
-    
+def rotate(degrees, speed=25):  # Add a speed parameter (default: 50 dps)
     BP.offset_motor_encoder(LEFT_MOTOR, BP.get_motor_encoder(LEFT_MOTOR))
     BP.offset_motor_encoder(RIGHT_MOTOR, BP.get_motor_encoder(RIGHT_MOTOR))
 
-    # Assuming 360 degrees corresponds to a full rotation of the motor
-    target_degrees = degrees * (360 / 90)  # Adjust this factor based on your robot's configuration
-    position_l = BP.get_motor_encoder(LEFT_MOTOR)
-    position_r = BP.get_motor_encoder(RIGHT_MOTOR)
-    BP.set_motor_position(LEFT_MOTOR, position_l+155)
-    BP.set_motor_position(RIGHT_MOTOR, position_r-155)
-    # print( "Position L: ", position_l, "Position R: ", position_r)
-    # while True:
-    #     left_encoder = BP.get_motor_encoder(LEFT_MOTOR)
-    #     right_encoder = BP.get_motor_encoder(RIGHT_MOTOR)
+    target_degrees = degrees * (360 / 90)  # Adjust factor based on calibration
 
-    #     if ((left_encoder) <= (position_l-225)) or ((right_encoder) >= (position_r+225)):
-    #         break
+    BP.set_motor_dps(LEFT_MOTOR, speed)   # Set slow speed
+    BP.set_motor_dps(RIGHT_MOTOR, -speed) # Opposite direction for rotation
 
-    time.sleep(3)
+    time.sleep(abs(target_degrees / speed))  # Wait for rotation to complete
 
     BP.set_motor_power(LEFT_MOTOR, 0)
     BP.set_motor_power(RIGHT_MOTOR, 0)
+
+
+# def rotate(degrees):
+
+#     # degrees = (degrees / 90) * ANGLE_CALIBRATION
+    
+#     BP.offset_motor_encoder(LEFT_MOTOR, BP.get_motor_encoder(LEFT_MOTOR))
+#     BP.offset_motor_encoder(RIGHT_MOTOR, BP.get_motor_encoder(RIGHT_MOTOR))
+
+#     # Assuming 360 degrees corresponds to a full rotation of the motor
+#     target_degrees = degrees * (360 / 90)  # Adjust this factor based on your robot's configuration
+#     position_l = BP.get_motor_encoder(LEFT_MOTOR)
+#     position_r = BP.get_motor_encoder(RIGHT_MOTOR)
+#     BP.set_motor_dps(LEFT_MOTOR, position_l+155)
+#     BP.set_motor_position(RIGHT_MOTOR, position_r-155)
+#     # print( "Position L: ", position_l, "Position R: ", position_r)
+#     # while True:
+#     #     left_encoder = BP.get_motor_encoder(LEFT_MOTOR)
+#     #     right_encoder = BP.get_motor_encoder(RIGHT_MOTOR)
+
+#     #     if ((left_encoder) <= (position_l-225)) or ((right_encoder) >= (position_r+225)):
+#     #         break
+
+#     time.sleep(3)
+
+#     BP.set_motor_power(LEFT_MOTOR, 0)
+#     BP.set_motor_power(RIGHT_MOTOR, 0)
 
 
 
