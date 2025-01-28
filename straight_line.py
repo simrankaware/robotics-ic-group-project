@@ -12,13 +12,13 @@ RIGHT_MOTOR = BP.PORT_C
 #Parameters
 BASE_POWER = 25
 
+
+
 def move_in_straight_line(duration):
     try:
         begin = time.time()
         print(begin)
         while time.time() - begin < duration:
-            time.sleep(1)
-            print(time.time() - begin)
             try:
                 BP.set_motor_power(LEFT_MOTOR, BASE_POWER)
                 BP.set_motor_power(RIGHT_MOTOR, BASE_POWER)
@@ -33,6 +33,9 @@ def move_in_straight_line(duration):
 
 
 def rotate(degrees):
+
+    degrees = (degrees / 39.75) * 90
+    
     BP.offset_motor_encoder(LEFT_MOTOR, BP.get_motor_encoder(LEFT_MOTOR))
     BP.offset_motor_encoder(RIGHT_MOTOR, BP.get_motor_encoder(RIGHT_MOTOR))
 
@@ -61,18 +64,18 @@ def rotate(degrees):
 
 
 try:
-    rotate(39.75)
+    rotate(90)
     time.sleep(1)
     move_in_straight_line(5)
-    rotate(39.75)
-    time.sleep(1)
-    time.sleep(1)
-    move_in_straight_line(5)
-    rotate(39.75)
+    rotate(90)
     time.sleep(1)
     time.sleep(1)
     move_in_straight_line(5)
-    rotate(39.75)
+    rotate(90)
+    time.sleep(1)
+    time.sleep(1)
+    move_in_straight_line(5)
+    rotate(90)
     move_in_straight_line(2)
     
  
