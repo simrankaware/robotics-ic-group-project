@@ -73,7 +73,7 @@ def rotate(degrees):
 
 
 try:
-    # move_in_straight_line(5)
+    move_in_straight_line(5)
     rotate(ANGLE_CALIBRATION)
     
     
