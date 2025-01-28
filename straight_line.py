@@ -52,7 +52,8 @@ def drive_straight_for_distance(distance, speed=20): # distance in cm
 
     BP.set_motor_dps(LEFT_MOTOR, speed)   # Set slow speed
     BP.set_motor_dps(RIGHT_MOTOR, speed) # Opposite direction for rotation
-
+    BP.set_motor_power(LEFT_MOTOR, speed)
+    BP.set_motor_power(RIGHT_MOTOR, speed)
     time.sleep(abs(target_degrees / speed))  # Wait for rotation to complete
 
     BP.set_motor_power(LEFT_MOTOR, 0)

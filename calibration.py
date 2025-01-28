@@ -51,3 +51,9 @@ def calibrate_straight_line(base_power, duration):
     print("Average left power: ", total_l/count)
     print("Average right power: ", total_r/count)
     return total_l/count, total_r/count
+
+if __name__ == "__main__":
+    l, r = calibrate_straight_line(BASE_POWER, 20)
+    print("\nCalibration done\n")
+    print("Left: ", l)
+    print("Right: ", r)
