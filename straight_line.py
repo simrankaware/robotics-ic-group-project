@@ -46,7 +46,7 @@ def move_in_straight_line(duration):
 
 def rotate(degrees):
 
-    degrees = (degrees / 90) * ANGLE_CALIBRATION
+    # degrees = (degrees / 90) * ANGLE_CALIBRATION
     
     BP.offset_motor_encoder(LEFT_MOTOR, BP.get_motor_encoder(LEFT_MOTOR))
     BP.offset_motor_encoder(RIGHT_MOTOR, BP.get_motor_encoder(RIGHT_MOTOR))
@@ -65,8 +65,8 @@ def rotate(degrees):
             break
 
         # Reduce power as it rotates
-        BP.set_motor_power(LEFT_MOTOR, BASE_POWER / 2)
-        BP.set_motor_power(RIGHT_MOTOR, BASE_POWER / 2)
+        BP.set_motor_power(LEFT_MOTOR, BASE_POWER)
+        BP.set_motor_power(RIGHT_MOTOR, BASE_POWER)
 
         time.sleep(0.05)
 
@@ -77,7 +77,7 @@ def rotate(degrees):
 
 try:
     move_in_straight_line(5)
-    rotate(90)
+    rotate(ANGLE_CALIBRATION)
     
     
  
