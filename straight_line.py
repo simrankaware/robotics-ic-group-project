@@ -10,31 +10,42 @@ LEFT_MOTOR = BP.PORT_B
 RIGHT_MOTOR = BP.PORT_C
 
 #Parameters
-BASE_POWER = 25
+BASE_POWER = 15
 
-
+ANGLE_CALIBRATION = 39.75
 
 def move_in_straight_line(duration):
-    try:
-        begin = time.time()
-        print(begin)
-        while time.time() - begin < duration:
-            try:
-                BP.set_motor_power(LEFT_MOTOR, BASE_POWER)
-                BP.set_motor_power(RIGHT_MOTOR, BASE_POWER)
-            except IOError as error:
-                print(error)
-        BP.set_motor_power(LEFT_MOTOR, 0)
-        BP.set_motor_power(RIGHT_MOTOR, 0)
-        BP.reset_all()
-    except KeyboardInterrupt: # except the program gets interrupted by Ctrl+C on the keyboard.
-        BP.reset_all() 
+    BP.offset_motor_encoder(LEFT_MOTOR, BP.get_motor_encoder(LEFT_MOTOR))
+    BP.offset_motor_encoder(RIGHT_MOTOR, BP.get_motor_encoder(RIGHT_MOTOR))
+
+    start_time = time.time()
+    print(start_time)
+
+    while time.time() - start_time < duration:
+        left_encoder = BP.get_motor_encoder(LEFT_MOTOR)
+        right_encoder = BP.get_motor_encoder(RIGHT_MOTOR)
+
+        # calculating error diff
+        error = left_encoder - right_encoder
+        print("Error: %6d" % error)
+        # calculating correction 
+        correction = error * kp
+
+        left_power = BASE_POWER - correction
+        right_power = BASE_POWER + correction
+
+        BP.set_motor_power(LEFT_MOTOR, left_power)
+        BP.set_motor_power(RIGHT_MOTOR, right_power)
+
+        print("Left encoder: %6d  Right encoder: %6d" % (left_encoder, right_encoder))
+
+        time.sleep(0.05) 
 
 
 
 def rotate(degrees):
 
-    degrees = (degrees / 39.75) * 90
+    degrees = (degrees / ANGLE_CALIBRATION)
     
     BP.offset_motor_encoder(LEFT_MOTOR, BP.get_motor_encoder(LEFT_MOTOR))
     BP.offset_motor_encoder(RIGHT_MOTOR, BP.get_motor_encoder(RIGHT_MOTOR))
@@ -64,19 +75,9 @@ def rotate(degrees):
 
 
 try:
-    rotate(90)
-    time.sleep(1)
     move_in_straight_line(5)
     rotate(90)
-    time.sleep(1)
-    time.sleep(1)
-    move_in_straight_line(5)
-    rotate(90)
-    time.sleep(1)
-    time.sleep(1)
-    move_in_straight_line(5)
-    rotate(90)
-    move_in_straight_line(2)
+    
     
  
 except KeyboardInterrupt: # except the program gets interrupted by Ctrl+C on the keyboard.
