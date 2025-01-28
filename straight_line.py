@@ -11,37 +11,26 @@ RIGHT_MOTOR = BP.PORT_C
 
 #Parameters
 BASE_POWER = 25
-kp = 1.5
 
 def move_in_straight_line(duration):
-    BP.offset_motor_encoder(LEFT_MOTOR, BP.get_motor_encoder(LEFT_MOTOR))
-    BP.offset_motor_encoder(RIGHT_MOTOR, BP.get_motor_encoder(RIGHT_MOTOR))
+    try:
+        begin = time.time()
+        print(begin)
+        while time.time() - begin < duration:
+            time.sleep(1)
+            print(time.time() - begin)
+            try:
+                BP.set_motor_power(LEFT_MOTOR, BASE_POWER)
+                BP.set_motor_power(RIGHT_MOTOR, BASE_POWER)
+            except IOError as error:
+                print(error)
+        BP.set_motor_power(LEFT_MOTOR, 0)
+        BP.set_motor_power(RIGHT_MOTOR, 0)
+        BP.reset_all()
+    except KeyboardInterrupt: # except the program gets interrupted by Ctrl+C on the keyboard.
+        BP.reset_all() 
 
-    start_time = time.time()
-    print(start_time)
 
-    while time.time() - start_time < duration:
-        left_encoder = BP.get_motor_encoder(LEFT_MOTOR)
-        right_encoder = BP.get_motor_encoder(RIGHT_MOTOR)
-
-        # calculating error diff
-        error = left_encoder - right_encoder
-        print("Error: %6d" % error)
-        # calculating correction 
-        correction = error * kp
-
-        left_power = BASE_POWER - correction
-        right_power = BASE_POWER + correction
-
-        BP.set_motor_power(LEFT_MOTOR, left_power)
-        BP.set_motor_power(RIGHT_MOTOR, right_power)
-
-        print("Left encoder: %6d  Right encoder: %6d" % (left_encoder, right_encoder))
-
-        time.sleep(0.05)
-
-    BP.set_motor_power(LEFT_MOTOR, 0)
-    BP.set_motor_power(RIGHT_MOTOR, 0)
 
 def rotate(degrees):
     BP.offset_motor_encoder(LEFT_MOTOR, BP.get_motor_encoder(LEFT_MOTOR))
@@ -59,6 +48,10 @@ def rotate(degrees):
 
         if abs(left_encoder) >= abs(target_degrees) and abs(right_encoder) >= abs(target_degrees):
             break
+
+        # Reduce power as it rotates
+        BP.set_motor_power(LEFT_MOTOR, BASE_POWER / 2)
+        BP.set_motor_power(RIGHT_MOTOR, BASE_POWER / 2)
 
         time.sleep(0.05)
 
