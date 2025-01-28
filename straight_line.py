@@ -46,7 +46,7 @@ def move_in_straight_line(duration):
 
 def rotate(degrees):
 
-    degrees = (degrees / ANGLE_CALIBRATION) * 90
+    degrees = (degrees / 90) * ANGLE_CALIBRATION
     
     BP.offset_motor_encoder(LEFT_MOTOR, BP.get_motor_encoder(LEFT_MOTOR))
     BP.offset_motor_encoder(RIGHT_MOTOR, BP.get_motor_encoder(RIGHT_MOTOR))
