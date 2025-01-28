@@ -62,10 +62,10 @@ def rotate(degrees):
     #     left_encoder = BP.get_motor_encoder(LEFT_MOTOR)
     #     right_encoder = BP.get_motor_encoder(RIGHT_MOTOR)
 
-    #     if (left_encoder) <= (position_l-225) and (right_encoder) >= (position_r+225):
+    #     if ((left_encoder) <= (position_l-225)) or ((right_encoder) >= (position_r+225)):
     #         break
 
-    #     time.sleep(0.05)
+    time.sleep(3)
 
     BP.set_motor_power(LEFT_MOTOR, 0)
     BP.set_motor_power(RIGHT_MOTOR, 0)
