@@ -11,6 +11,7 @@ RIGHT_MOTOR = BP.PORT_C
 
 #Parameters
 BASE_POWER = 15
+kp = 1.5
 
 ANGLE_CALIBRATION = 39.75
 
