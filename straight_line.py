@@ -61,22 +61,6 @@ def rotate(degrees):
 
 
 try:
-    # begin = time.time()
-    # print(begin)
-    # while time.time() - begin < 5:
-    #     time.sleep(1)
-    #     print(time.time() - begin)
-    # try:
-    #     target = BP.set_motor_power(BP.PORT_C, -15)
-    # except IOError as error:
-    #     print(error)
-    # BP.set_motor_position(BP.PORT_B, target)
-    # begin = time.time()
-    # while time.time() - begin < 15:
-    #     time.sleep(1)
-    #     print(time.time() - begin)
-    # BP.reset_all()
-
     rotate(39.75)
     time.sleep(1)
     move_in_straight_line(5)
