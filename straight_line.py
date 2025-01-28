@@ -44,34 +44,30 @@ def move_in_straight_line(duration):
 
         time.sleep(0.05) 
 
-def drive_straight_for_distance(distance, speed=20): # distance in cm
+def drive_straight_for_distance(distance, speed=-20): # distance in cm
     BP.offset_motor_encoder(LEFT_MOTOR, BP.get_motor_encoder(LEFT_MOTOR))
     BP.offset_motor_encoder(RIGHT_MOTOR, BP.get_motor_encoder(RIGHT_MOTOR))
 
-    target_degrees = distance / (WHEEL_RADIUS * pi)  # Adjust factor based on calibration
-
+    rotations = distance / (WHEEL_RADIUS * pi * 2)
+    print(rotations)
+    target_degrees = rotations * 360
+    print(target_degrees)
     BP.set_motor_dps(LEFT_MOTOR, speed)   # Set slow speed
     BP.set_motor_dps(RIGHT_MOTOR, speed) # Opposite direction for rotation
-    BP.set_motor_power(LEFT_MOTOR, speed)
-    BP.set_motor_power(RIGHT_MOTOR, speed)
-    time.sleep(abs(target_degrees / speed))  # Wait for rotation to complete
+    print(speed)
+    time.sleep(abs(target_degrees / speed) * 0.9)  # Wait for rotation to complete
+    print("Done")
 
-    BP.set_motor_power(LEFT_MOTOR, 0)
-    BP.set_motor_power(RIGHT_MOTOR, 0)
 
-def rotate(degrees, speed=25):  # Add a speed parameter (default: 50 dps)
+def rotate(degrees, speed=50):  # Add a speed parameter (default: 50 dps)
     BP.offset_motor_encoder(LEFT_MOTOR, BP.get_motor_encoder(LEFT_MOTOR))
     BP.offset_motor_encoder(RIGHT_MOTOR, BP.get_motor_encoder(RIGHT_MOTOR))
 
-    target_degrees = degrees * (360 / 90)  # Adjust factor based on calibration
+    target_degrees = degrees * (360 / 85)  # Adjust factor based on calibration
 
     BP.set_motor_dps(LEFT_MOTOR, speed)   # Set slow speed
     BP.set_motor_dps(RIGHT_MOTOR, -speed) # Opposite direction for rotation
-
     time.sleep(abs(target_degrees / speed))  # Wait for rotation to complete
-
-    BP.set_motor_power(LEFT_MOTOR, 0)
-    BP.set_motor_power(RIGHT_MOTOR, 0)
 
 
 # def rotate(degrees):
@@ -103,13 +99,13 @@ def rotate(degrees, speed=25):  # Add a speed parameter (default: 50 dps)
 
 
 try:
-    drive_straight_for_distance(40, 20)
+    drive_straight_for_distance(40, -120)
     rotate(ANGLE_CALIBRATION)
-    drive_straight_for_distance(40, 20)
+    drive_straight_for_distance(40, -120)
     rotate(ANGLE_CALIBRATION)
-    drive_straight_for_distance(40, 20)
+    drive_straight_for_distance(40, -120)
     rotate(ANGLE_CALIBRATION)
-    drive_straight_for_distance(40, 20)
+    drive_straight_for_distance(40, -120)
     BP.reset_all()
     
  
