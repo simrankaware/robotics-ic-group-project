@@ -55,8 +55,8 @@ def rotate(degrees):
     target_degrees = degrees * (360 / 90)  # Adjust this factor based on your robot's configuration
     position_l = BP.get_motor_encoder(LEFT_MOTOR)
     position_r = BP.get_motor_encoder(RIGHT_MOTOR)
-    BP.set_motor_position(LEFT_MOTOR, position_l+180)
-    BP.set_motor_position(RIGHT_MOTOR, position_r-180)
+    BP.set_motor_position(LEFT_MOTOR, position_l+155)
+    BP.set_motor_position(RIGHT_MOTOR, position_r-155)
     # print( "Position L: ", position_l, "Position R: ", position_r)
     # while True:
     #     left_encoder = BP.get_motor_encoder(LEFT_MOTOR)
@@ -73,8 +73,13 @@ def rotate(degrees):
 
 
 try:
-    # move_in_straight_line(5)
+    move_in_straight_line(5)
     rotate(ANGLE_CALIBRATION)
+    move_in_straight_line(5)
+    rotate(ANGLE_CALIBRATION)
+    move_in_straight_line(5)
+    rotate(ANGLE_CALIBRATION)
+    move_in_straight_line(5)
     
     
  
