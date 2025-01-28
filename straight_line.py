@@ -1,6 +1,6 @@
 from __future__ import print_function # use python 3 syntax but make it compatible with python 2
 from __future__ import division       #                           ''
-
+from math import pi
 import time     # import the time library for the sleep function
 import brickpi3 # import the BrickPi3 drivers
 
@@ -8,12 +8,14 @@ BP = brickpi3.BrickPi3() # Create an instance of the BrickPi3 class. BP will be 
 
 LEFT_MOTOR = BP.PORT_B
 RIGHT_MOTOR = BP.PORT_C
+WHEEL_RADIUS = 3
 
 #Parameters
 BASE_POWER = -15
 kp = 1.5
 
 ANGLE_CALIBRATION = 39.75
+
 
 def move_in_straight_line(duration):
     BP.offset_motor_encoder(LEFT_MOTOR, BP.get_motor_encoder(LEFT_MOTOR))
@@ -42,6 +44,19 @@ def move_in_straight_line(duration):
 
         time.sleep(0.05) 
 
+def drive_straight_for_distance(distance, speed=20): # distance in cm
+    BP.offset_motor_encoder(LEFT_MOTOR, BP.get_motor_encoder(LEFT_MOTOR))
+    BP.offset_motor_encoder(RIGHT_MOTOR, BP.get_motor_encoder(RIGHT_MOTOR))
+
+    target_degrees = distance / (WHEEL_RADIUS * pi)  # Adjust factor based on calibration
+
+    BP.set_motor_dps(LEFT_MOTOR, speed)   # Set slow speed
+    BP.set_motor_dps(RIGHT_MOTOR, speed) # Opposite direction for rotation
+
+    time.sleep(abs(target_degrees / speed))  # Wait for rotation to complete
+
+    BP.set_motor_power(LEFT_MOTOR, 0)
+    BP.set_motor_power(RIGHT_MOTOR, 0)
 
 def rotate(degrees, speed=25):  # Add a speed parameter (default: 50 dps)
     BP.offset_motor_encoder(LEFT_MOTOR, BP.get_motor_encoder(LEFT_MOTOR))
@@ -87,13 +102,13 @@ def rotate(degrees, speed=25):  # Add a speed parameter (default: 50 dps)
 
 
 try:
-    move_in_straight_line(5)
+    drive_straight_for_distance(40, 20)
     rotate(ANGLE_CALIBRATION)
-    move_in_straight_line(5)
+    drive_straight_for_distance(40, 20)
     rotate(ANGLE_CALIBRATION)
-    move_in_straight_line(5)
+    drive_straight_for_distance(40, 20)
     rotate(ANGLE_CALIBRATION)
-    move_in_straight_line(5)
+    drive_straight_for_distance(40, 20)
     BP.reset_all()
     
  
