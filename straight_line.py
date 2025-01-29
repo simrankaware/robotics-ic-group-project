@@ -8,7 +8,7 @@ BP = brickpi3.BrickPi3() # Create an instance of the BrickPi3 class. BP will be 
 
 LEFT_MOTOR = BP.PORT_B
 RIGHT_MOTOR = BP.PORT_C
-WHEEL_RADIUS = 3.5
+WHEEL_RADIUS = 3.35
 AXLE_RADIUS = 6.5
 WHEEL_ROTATION_FOR_90_DEGREES = ((AXLE_RADIUS * pi) / 2) / (2 * pi * WHEEL_RADIUS) * 360
 
@@ -65,7 +65,7 @@ def drive_straight_for_distance(distance, speed=-20): # distance in cm
     print(f"Done with straight at\n L: {BP.get_motor_encoder(LEFT_MOTOR)}\n R: {BP.get_motor_encoder(RIGHT_MOTOR)}")
 
 
-def rotate(degrees, speed=25):  # Add a speed parameter (default: 50 dps)
+def rotate(degrees, speed=35):  # Add a speed parameter (default: 50 dps)
     BP.offset_motor_encoder(LEFT_MOTOR, BP.get_motor_encoder(LEFT_MOTOR))
     BP.offset_motor_encoder(RIGHT_MOTOR, BP.get_motor_encoder(RIGHT_MOTOR))
 
