@@ -8,7 +8,7 @@ BP = brickpi3.BrickPi3() # Create an instance of the BrickPi3 class. BP will be 
 
 LEFT_MOTOR = BP.PORT_B
 RIGHT_MOTOR = BP.PORT_C
-WHEEL_RADIUS = 3.3
+WHEEL_RADIUS = 3.2
 AXLE_RADIUS = 6.5
 WHEEL_ROTATION_FOR_90_DEGREES = ((AXLE_RADIUS * pi) / 2) / (2 * pi * WHEEL_RADIUS) * 360
 
