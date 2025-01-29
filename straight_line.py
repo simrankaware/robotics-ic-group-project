@@ -14,6 +14,8 @@ WHEEL_RADIUS = 3
 BASE_POWER = -15
 kp = 1.5
 
+TIME_DELAY = 300 / (120 * pi) 
+
 ANGLE_CALIBRATION = 39.75
 
 
@@ -49,17 +51,20 @@ def drive_straight_for_distance(distance, speed=-20): # distance in cm
     BP.offset_motor_encoder(RIGHT_MOTOR, BP.get_motor_encoder(RIGHT_MOTOR))
 
     rotations = distance / (WHEEL_RADIUS * pi * 2)
-    print(rotations)
+    print(f"Number of rotations per straight: f{rotations}")
     target_degrees = rotations * 360
-    print(target_degrees)
+    print(f"Degrees of rotation required per straight: f{target_degrees}")
     BP.set_motor_dps(LEFT_MOTOR, speed)   # Set slow speed
     BP.set_motor_dps(RIGHT_MOTOR, speed) # Opposite direction for rotation
-    print(speed)
-    time.sleep(abs(target_degrees / speed) * 0.9)  # Wait for rotation to complete
-    print("Done")
+    sleep_time = abs(target_degrees / speed)
+    sleep_time = sleep_time - TIME_DELAY if TIME_DELAY < sleep_time else 0
+    time.sleep(sleep_time)  # Wait for rotation to complete
+    print(f"Slept for f{sleep_time} seconds")
+    print(f"Done with straight at\n  position L: {BP.get_motor_encoder(LEFT_MOTOR)}\n  {BP.get_motor_encoder(RIGHT_MOTOR)}")
 
 
 def rotate(degrees, speed=50):  # Add a speed parameter (default: 50 dps)
+    print
     BP.offset_motor_encoder(LEFT_MOTOR, BP.get_motor_encoder(LEFT_MOTOR))
     BP.offset_motor_encoder(RIGHT_MOTOR, BP.get_motor_encoder(RIGHT_MOTOR))
 
