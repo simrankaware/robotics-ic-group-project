@@ -62,7 +62,7 @@ def drive_straight_for_distance(distance, speed=-20): # distance in cm
     sleep_time = sleep_time - TIME_DELAY if TIME_DELAY < sleep_time else 0
     time.sleep(sleep_time)  # Wait for rotation to complete
     print(f"Slept for f{sleep_time} seconds")
-    print(f"Done with straight at\n  position L: {BP.get_motor_encoder(LEFT_MOTOR)}\n  {BP.get_motor_encoder(RIGHT_MOTOR)}")
+    print(f"Done with straight at\n L: {BP.get_motor_encoder(LEFT_MOTOR)}\n R: {BP.get_motor_encoder(RIGHT_MOTOR)}")
 
 
 def rotate(degrees, speed=30):  # Add a speed parameter (default: 50 dps)
@@ -78,7 +78,7 @@ def rotate(degrees, speed=30):  # Add a speed parameter (default: 50 dps)
     sleep_time = sleep_time - TIME_DELAY if TIME_DELAY < sleep_time else 0
     time.sleep(sleep_time)  # Wait for rotation to complete
     print(f"Slept for f{sleep_time} seconds")
-    print(f"Done with rotate at\n  position L: {BP.get_motor_encoder(LEFT_MOTOR)}\n  {BP.get_motor_encoder(RIGHT_MOTOR)}")
+    print(f"Done with rotate at\n L: {BP.get_motor_encoder(LEFT_MOTOR)}\n  R: {BP.get_motor_encoder(RIGHT_MOTOR)}")
 
 
 # def rotate(degrees):
