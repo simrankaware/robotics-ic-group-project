@@ -65,7 +65,7 @@ def drive_straight_for_distance(distance, speed=-20): # distance in cm
     print(f"Done with straight at\n L: {BP.get_motor_encoder(LEFT_MOTOR)}\n R: {BP.get_motor_encoder(RIGHT_MOTOR)}")
 
 
-def rotate(degrees, speed=30):  # Add a speed parameter (default: 50 dps)
+def rotate(degrees, speed=10):  # Add a speed parameter (default: 50 dps)
     BP.offset_motor_encoder(LEFT_MOTOR, BP.get_motor_encoder(LEFT_MOTOR))
     BP.offset_motor_encoder(RIGHT_MOTOR, BP.get_motor_encoder(RIGHT_MOTOR))
 
