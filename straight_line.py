@@ -111,15 +111,14 @@ def rotate(degrees, speed=30):  # Add a speed parameter (default: 50 dps)
 
 try:
     drive_straight_for_distance(40, -120)
-    rotate(ANGLE_CALIBRATION)
+    rotate(WHEEL_ROTATION_FOR_90_DEGREES)
     drive_straight_for_distance(40, -120)
-    rotate(ANGLE_CALIBRATION)
+    rotate(WHEEL_ROTATION_FOR_90_DEGREES)
     drive_straight_for_distance(40, -120)
-    rotate(ANGLE_CALIBRATION)
+    rotate(WHEEL_ROTATION_FOR_90_DEGREES)
     drive_straight_for_distance(40, -120)
+    rotate(WHEEL_ROTATION_FOR_90_DEGREES)
     BP.reset_all()
-    
- 
 except KeyboardInterrupt: # except the program gets interrupted by Ctrl+C on the keyboard.
     BP.reset_all()        # Unconfigure the sensors, disable the motors, and restore the LED to the control of the >
 
