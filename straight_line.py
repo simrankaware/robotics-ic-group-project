@@ -9,6 +9,8 @@ BP = brickpi3.BrickPi3() # Create an instance of the BrickPi3 class. BP will be 
 LEFT_MOTOR = BP.PORT_B
 RIGHT_MOTOR = BP.PORT_C
 WHEEL_RADIUS = 3
+AXLE_RADIUS = 6.5
+WHEEL_ROTATION_FOR_90_DEGREES = ((AXLE_RADIUS * pi) / 2) / (2 * pi * WHEEL_RADIUS) * 360
 
 #Parameters
 BASE_POWER = -15
@@ -63,16 +65,20 @@ def drive_straight_for_distance(distance, speed=-20): # distance in cm
     print(f"Done with straight at\n  position L: {BP.get_motor_encoder(LEFT_MOTOR)}\n  {BP.get_motor_encoder(RIGHT_MOTOR)}")
 
 
-def rotate(degrees, speed=50):  # Add a speed parameter (default: 50 dps)
-    print
+def rotate(degrees, speed=30):  # Add a speed parameter (default: 50 dps)
     BP.offset_motor_encoder(LEFT_MOTOR, BP.get_motor_encoder(LEFT_MOTOR))
     BP.offset_motor_encoder(RIGHT_MOTOR, BP.get_motor_encoder(RIGHT_MOTOR))
 
-    target_degrees = degrees * (360 / 85)  # Adjust factor based on calibration
+    target_degrees = degrees # Adjust factor based on calibration
 
     BP.set_motor_dps(LEFT_MOTOR, speed)   # Set slow speed
     BP.set_motor_dps(RIGHT_MOTOR, -speed) # Opposite direction for rotation
-    time.sleep(abs(target_degrees / speed))  # Wait for rotation to complete
+
+    sleep_time = abs(target_degrees / speed)
+    sleep_time = sleep_time - TIME_DELAY if TIME_DELAY < sleep_time else 0
+    time.sleep(sleep_time)  # Wait for rotation to complete
+    print(f"Slept for f{sleep_time} seconds")
+    print(f"Done with rotate at\n  position L: {BP.get_motor_encoder(LEFT_MOTOR)}\n  {BP.get_motor_encoder(RIGHT_MOTOR)}")
 
 
 # def rotate(degrees):
