@@ -12,7 +12,7 @@ WHEEL_RADIUS = 3.05
 AXLE_RADIUS = 6.5
 WHEEL_ROTATION_FOR_90_DEGREES = ((AXLE_RADIUS * pi) / 2) / (2 * pi * WHEEL_RADIUS) * 360
 
-#Parameters
+# Parameters
 BASE_POWER = -15
 kp = 1.5
 
@@ -21,7 +21,7 @@ TIME_DELAY = 300 / (120 * pi)
 ANGLE_CALIBRATION = 39.75
 
 
-def move_in_straight_line(duration):
+def drive_straight_for_time(duration):
     BP.offset_motor_encoder(LEFT_MOTOR, BP.get_motor_encoder(LEFT_MOTOR))
     BP.offset_motor_encoder(RIGHT_MOTOR, BP.get_motor_encoder(RIGHT_MOTOR))
 
@@ -81,45 +81,9 @@ def rotate(degrees, speed=35):  # Add a speed parameter (default: 50 dps)
     print(f"Done with rotate at\n L: {BP.get_motor_encoder(LEFT_MOTOR)}\n  R: {BP.get_motor_encoder(RIGHT_MOTOR)}")
 
 
-# def rotate(degrees):
-
-#     # degrees = (degrees / 90) * ANGLE_CALIBRATION
-    
-#     BP.offset_motor_encoder(LEFT_MOTOR, BP.get_motor_encoder(LEFT_MOTOR))
-#     BP.offset_motor_encoder(RIGHT_MOTOR, BP.get_motor_encoder(RIGHT_MOTOR))
-
-#     # Assuming 360 degrees corresponds to a full rotation of the motor
-#     target_degrees = degrees * (360 / 90)  # Adjust this factor based on your robot's configuration
-#     position_l = BP.get_motor_encoder(LEFT_MOTOR)
-#     position_r = BP.get_motor_encoder(RIGHT_MOTOR)
-#     BP.set_motor_dps(LEFT_MOTOR, position_l+155)
-#     BP.set_motor_position(RIGHT_MOTOR, position_r-155)
-#     # print( "Position L: ", position_l, "Position R: ", position_r)
-#     # while True:
-#     #     left_encoder = BP.get_motor_encoder(LEFT_MOTOR)
-#     #     right_encoder = BP.get_motor_encoder(RIGHT_MOTOR)
-
-#     #     if ((left_encoder) <= (position_l-225)) or ((right_encoder) >= (position_r+225)):
-#     #         break
-
-#     time.sleep(3)
-
-#     BP.set_motor_power(LEFT_MOTOR, 0)
-#     BP.set_motor_power(RIGHT_MOTOR, 0)
-
-
-
-try:
-    drive_straight_for_distance(40, -120)
-    # rotate(WHEEL_ROTATION_FOR_90_DEGREES)
-    # drive_straight_for_distance(40, -120)
-    # rotate(WHEEL_ROTATION_FOR_90_DEGREES)
-    # drive_straight_for_distance(40, -120)
-    # rotate(WHEEL_ROTATION_FOR_90_DEGREES)
-    # drive_straight_for_distance(40, -120)
-    # rotate(WHEEL_ROTATION_FOR_90_DEGREES)
+if __name__=="__main__":
+  try:
+    drive_straight_for_distance(10, -120)
     BP.reset_all()
-except KeyboardInterrupt: # except the program gets interrupted by Ctrl+C on the keyboard.
+  except KeyboardInterrupt: # except the program gets interrupted by Ctrl+C on the keyboard.
     BP.reset_all()        # Unconfigure the sensors, disable the motors, and restore the LED to the control of the >
-
-
