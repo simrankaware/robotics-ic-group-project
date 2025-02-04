@@ -1,0 +1,6 @@
+TODOs:
+- recalibrate for carpet instead of paper
+- left turns instead of right turns
+- moving 10cm at a time
+- refactor this mess???????? make a utils file
+- 
