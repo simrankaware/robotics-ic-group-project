@@ -21,14 +21,9 @@ TIME_DELAY = 300 / (120 * pi)
 
 ANGLE_CALIBRATION = 39.75
 
-<<<<<<< HEAD
 DISTANCE = 10 # in cm
 ANG_VELOCITY = -120
 SLEEP = 10
-=======
-DISTANCE = 40 # in cm
-ANG_VELOCITY = -120
->>>>>>> a76a286c6900fb54293e55a4d8364adb3dd922f9
 
 particles = []
 
