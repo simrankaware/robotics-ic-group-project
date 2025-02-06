@@ -1,9 +1,8 @@
 from __future__ import print_function # use python 3 syntax but make it compatible with python 2
 from __future__ import division       #                           ''
-from math import pi, cos
+from math import pi
 import time     # import the time library for the sleep function
 import brickpi3 # import the BrickPi3 drivers
-import random
 
 BP = brickpi3.BrickPi3() # Create an instance of the BrickPi3 class. BP will be the BrickPi3 object.
 
@@ -21,42 +20,9 @@ TIME_DELAY = 300 / (120 * pi)
 
 ANGLE_CALIBRATION = 39.75
 
-<<<<<<< HEAD
-DISTANCE = 10 # in cm
-ANG_VELOCITY = -120
-SLEEP = 10
-=======
 DISTANCE = 40 # in cm
 ANG_VELOCITY = -120
->>>>>>> a76a286c6900fb54293e55a4d8364adb3dd922f9
 
-particles = []
-
-
-def sample_gaussian(mean=0, std_dev=1):
-    return random.gauss(mean, std_dev)
-
-def init_particles(num):
-    particles = [(0, 0, 0) for i in range(num)]
-    
-def perturb_particle_straight_line(dist):
-
-    for i in range(len(particles)):
-        (x, y, theta) = particles[i]
-        e = sample_gaussian()
-        f = sample_gaussian()
-        particles[i] = (x + (dist+e)*cos(theta),
-                        y + (dist+e)*cos(theta),
-                        theta + f)
-        
-
-def perturb_particle_rotation(angle):
-    for i in range(len(particles)):
-        (x, y, theta) = particles[i]
-        f = sample_gaussian()
-        particles[i] = (x,
-                        y,
-                        theta + angle + f)
 
 
 def drive_straight_for_time(duration):
@@ -86,7 +52,7 @@ def drive_straight_for_time(duration):
 
         time.sleep(0.05) 
 
-def drive_straight_for_distance(distance, speed=-50): # distance in cm
+def drive_straight_for_distance(distance, speed=-20): # distance in cm
     BP.offset_motor_encoder(LEFT_MOTOR, BP.get_motor_encoder(LEFT_MOTOR))
     BP.offset_motor_encoder(RIGHT_MOTOR, BP.get_motor_encoder(RIGHT_MOTOR))
 
@@ -103,7 +69,7 @@ def drive_straight_for_distance(distance, speed=-50): # distance in cm
     print(f"Done with straight at\n L: {BP.get_motor_encoder(LEFT_MOTOR)}\n R: {BP.get_motor_encoder(RIGHT_MOTOR)}")
 
 
-def rotate(degrees, speed=50):  # Add a speed parameter (default: 50 dps)
+def rotate(degrees, speed=35):  # Add a speed parameter (default: 50 dps)
     BP.offset_motor_encoder(LEFT_MOTOR, BP.get_motor_encoder(LEFT_MOTOR))
     BP.offset_motor_encoder(RIGHT_MOTOR, BP.get_motor_encoder(RIGHT_MOTOR))
 
@@ -122,22 +88,6 @@ def rotate(degrees, speed=50):  # Add a speed parameter (default: 50 dps)
 
 
 if __name__ == "__main__":
-  init_particles(100)
-  print("drawParticles:" + str(particles))
   for _ in range(4):
-        for _ in range(4):
-            drive_straight_for_distance(DISTANCE, ANG_VELOCITY)
-            BP.set_motor_dps(LEFT_MOTOR, 0)
-            BP.set_motor_dps(RIGHT_MOTOR, 0)
-            time.sleep(2)
-            perturb_particle_straight_line(DISTANCE)
-            print("drawParticles:" + str(particles))
-
-            
-        rotate(WHEEL_ROTATION_FOR_90_DEGREES)
-        BP.set_motor_dps(LEFT_MOTOR, 0)
-        BP.set_motor_dps(RIGHT_MOTOR, 0)
-        time.sleep(2)
-        perturb_particle_rotation(DISTANCE)
-        print("drawParticles:" + str(particles))
-  BP.reset_all()
+    drive_straight_for_distance(DISTANCE, ANG_VELOCITY)
+    rotate(WHEEL_ROTATION_FOR_90_DEGREES)
