@@ -1,6 +1,6 @@
 from __future__ import print_function # use python 3 syntax but make it compatible with python 2
 from __future__ import division       #                           ''
-from math import pi, cos, sin
+from math import pi, cos, sin, sqrt
 import time     # import the time library for the sleep function
 import brickpi3 # import the BrickPi3 drivers
 import random
@@ -29,12 +29,12 @@ SLEEP = 10
 # i.e 160cm -> 5cm
 # then for one 10cm straight line motion, the variance is 5/16 = 0.3125
 # estimate a very small rotational variance (very little was observed experimentally)
-sd_e = 0.3125  # s.d. for straight line
-sd_f = 0.005  # s.d. for rotation during straight line motion
+sd_e = sqrt(0.3125)  # s.d. for straight line
+sd_f = sqrt(0.005)  # s.d. for rotation during straight line motion
 
 # estimating overall angular variance as about 20 degrees or about 0.3 radians
 # then for one 90 degree turn, the variance is 0.3/4 = 0.075
-sd_g = 0.075 # s.d. for rotation
+sd_g = sqrt(0.075) # s.d. for rotation
 
 DRAW_SCALE = 15
 X_OFFSET = 200
