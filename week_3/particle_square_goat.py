@@ -73,6 +73,17 @@ def perturb_particle_rotation(angle, particles):
         
     return particles
 
+def get_robot_position_point_estimate(particles):
+    x = 0
+    y = 0
+    theta = 0
+    # weighted mean
+    for (x_p, y_p, theta_p, w) in particles:
+        x += x_p * w
+        y += y_p * w
+        theta += theta_p * w
+    return (x, y, theta)
+
 
 def drive_straight_for_time(duration):
     BP.offset_motor_encoder(LEFT_MOTOR, BP.get_motor_encoder(LEFT_MOTOR))
