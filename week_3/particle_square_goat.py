@@ -25,9 +25,16 @@ DISTANCE = 10 # in cm
 ANG_VELOCITY = -120
 SLEEP = 10
 
-sd_e = 0.25  # s.d. for straight line
-sd_f = 0.025  # s.d. for rotation during straight line motion
-sd_g = 0.025 # s.d. for rotation
+# Estimating the overall variance in the straight line motion as about 5 cm
+# i.e 160cm -> 5cm
+# then for one 10cm straight line motion, the variance is 5/16 = 0.3125
+# estimate a very small rotational variance (very little was observed experimentally)
+sd_e = 0.3125  # s.d. for straight line
+sd_f = 0.005  # s.d. for rotation during straight line motion
+
+# estimating overall angular variance as about 20 degrees or about 0.3 radians
+# then for one 90 degree turn, the variance is 0.3/4 = 0.075
+sd_g = 0.075 # s.d. for rotation
 
 DRAW_SCALE = 15
 X_OFFSET = 200
