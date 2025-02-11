@@ -10,31 +10,33 @@ BP = brickpi3.BrickPi3() # Create an instance of the BrickPi3 class. BP will be 
 LEFT_MOTOR = BP.PORT_B
 RIGHT_MOTOR = BP.PORT_C
 WHEEL_RADIUS = 3.05
-AXLE_RADIUS = 6.5
+AXLE_RADIUS = 8.5
 WHEEL_ROTATION_FOR_90_DEGREES = ((AXLE_RADIUS * pi) / 2) / (2 * pi * WHEEL_RADIUS) * 360
 
 # Parameters
-BASE_POWER = -15
+BASE_POWER = 15
 kp = 1.5
 
-TIME_DELAY = 300 / (120 * pi) 
-
+#TIME_DELAY = 300 / (360 * pi) 
+TIME_DELAY = 0
 ANGLE_CALIBRATION = 39.75
 
 DISTANCE = 10 # in cm
-ANG_VELOCITY = -120
+ANG_VELOCITY = 350
 SLEEP = 10
+LINE_TIME_MULTIPLIER = 0.9
+ROTATION_TIME_MULTIPLIER = 0.88
 
 # Estimating the overall variance in the straight line motion as about 5 cm
 # i.e 160cm -> 5cm
 # then for one 10cm straight line motion, the variance is 5/16 = 0.3125
 # estimate a very small rotational variance (very little was observed experimentally)
-sd_e = sqrt(0.3125)  # s.d. for straight line
-sd_f = sqrt(0.005)  # s.d. for rotation during straight line motion
+sd_e = 0.25  # s.d. for straight line
+sd_f = 0.025  # s.d. for rotation during straight line motion
 
 # estimating overall angular variance as about 20 degrees or about 0.3 radians
 # then for one 90 degree turn, the variance is 0.3/4 = 0.075
-sd_g = sqrt(0.075) # s.d. for rotation
+sd_g = 0.025 # s.d. for rotation
 
 DRAW_SCALE = 15
 X_OFFSET = 200
@@ -119,7 +121,7 @@ def drive_straight_for_time(duration):
 
         time.sleep(0.05) 
 
-def drive_straight_for_distance(distance, speed=-50): # distance in cm
+def drive_straight_for_distance(distance, speed=50): # distance in cm
     BP.offset_motor_encoder(LEFT_MOTOR, BP.get_motor_encoder(LEFT_MOTOR))
     BP.offset_motor_encoder(RIGHT_MOTOR, BP.get_motor_encoder(RIGHT_MOTOR))
 
@@ -130,13 +132,14 @@ def drive_straight_for_distance(distance, speed=-50): # distance in cm
     BP.set_motor_dps(LEFT_MOTOR, speed)   # Set slow speed
     BP.set_motor_dps(RIGHT_MOTOR, speed) # Opposite direction for rotation
     sleep_time = abs(target_degrees / speed)
-    sleep_time = sleep_time - TIME_DELAY if TIME_DELAY < sleep_time else 0
+    #sleep_time = sleep_time - TIME_DELAY if TIME_DELAY < sleep_time else 0
+    sleep_time = sleep_time * LINE_TIME_MULTIPLIER
     time.sleep(sleep_time)  # Wait for rotation to complete
     print(f"Slept for f{sleep_time} seconds")
     print(f"Done with straight at\n L: {BP.get_motor_encoder(LEFT_MOTOR)}\n R: {BP.get_motor_encoder(RIGHT_MOTOR)}")
 
 
-def rotate(degrees, speed=50):  # Add a speed parameter (default: 50 dps)
+def rotate(degrees, speed=ANG_VELOCITY):  # Add a speed parameter (default: 50 dps)
     BP.offset_motor_encoder(LEFT_MOTOR, BP.get_motor_encoder(LEFT_MOTOR))
     BP.offset_motor_encoder(RIGHT_MOTOR, BP.get_motor_encoder(RIGHT_MOTOR))
 
@@ -146,7 +149,8 @@ def rotate(degrees, speed=50):  # Add a speed parameter (default: 50 dps)
     BP.set_motor_dps(RIGHT_MOTOR, speed) # Opposite direction for rotation
 
     sleep_time = abs(target_degrees / speed)
-    sleep_time = sleep_time - TIME_DELAY if TIME_DELAY < sleep_time else 0
+    #sleep_time = sleep_time - TIME_DELAY if TIME_DELAY < sleep_time else 0
+    sleep_time = sleep_time * ROTATION_TIME_MULTIPLIER
     time.sleep(sleep_time)  # Wait for rotation to complete
     print(f"Slept for f{sleep_time} seconds")
     print(f"Done with rotate at\n L: {BP.get_motor_encoder(LEFT_MOTOR)}\n  R: {BP.get_motor_encoder(RIGHT_MOTOR)}")
