@@ -10,6 +10,12 @@ import random
 
 BP = brickpi3.BrickPi3() # Create an instance of the BrickPi3 class. BP will be the BrickPi3 object.
 
+# Configure for an NXT ultrasonic sensor.
+# BP.set_sensor_type configures the BrickPi3 for a specific sensor.
+# BP.PORT_1 specifies that the sensor will be on sensor port 1.
+# BP.SENSOR_TYPE.NXT_ULTRASONIC specifies that the sensor will be an NXT ultrasonic sensor.
+BP.set_sensor_type(BP.PORT_1, BP.SENSOR_TYPE.NXT_ULTRASONIC)
+
 LEFT_MOTOR = BP.PORT_B
 RIGHT_MOTOR = BP.PORT_C
 WHEEL_RADIUS = 3.05
@@ -34,7 +40,12 @@ SIGMA = 2  # Standard deviation of the Gaussian likelihood function
             
 def sample_gaussian(mean=0, std_dev=1):
         return random.gauss(mean, std_dev)
-# A Canvas class for drawing a map and particles:
+
+def gaussian_likelihood(z, m, sigma, K=0):
+    """
+    Gaussian function with mean mu and standard deviation sigma.
+    """
+    return e ** ((-(z - m)**2) / (2 * sigma**2)) + K
 #     - it takes care of a proper scaling and coordinate transformation between
 #      the map frame of reference (in cm) and the display (in pixels)
 class Canvas:
@@ -121,11 +132,7 @@ class Particles:
         return (x, y, theta)
 
     
-    def gaussian_likelihood(z, m, sigma, K=0):
-        """
-        Gaussian function with mean mu and standard deviation sigma.
-        """
-        return e ^ ((-(z - m)**2)/ 2 * sigma**2) + K
+
 
 
 
@@ -159,7 +166,7 @@ class Particles:
         # The standard deviation σ should be set according to what you learned about the sonar in last week’s calibration exercise.
         # You can use a standard deviation of around 2–3cm to be a bit conservative.
 
-        likelihood = self.gaussian_likelihood(z, m, SIGMA, K)
+        likelihood = gaussian_likelihood(z, m, SIGMA, K)
 
         # Use standard deviation set according to what you learned about the sonar in last week’s calibration exercise
         # — I would probably use around 2–3cm to be a bit conservative.
@@ -210,15 +217,22 @@ class Particles:
         """
         Update the particles' weights based on the sonar measurement.
         """
+        new_particles = []
         for particle in self.data:
-            x, y, theta = particle
+            x, y, theta, w = particle
             likelihood = self.calculate_likelihood(x, y, theta, z, map)
-            particle.weight *= likelihood
+            print("Likelihood: " + str(likelihood))
+            w *= likelihood
+            print(w)
+            new_particles.append((x, y, theta, w))
 
+        self.data = []
         # Normalize the weights
-        total_weight = sum(particle.weight for particle in self.data)
-        for particle in self.data:
-            particle.weight /= total_weight 
+        total_weight = sum(w for (_, _, _, w) in new_particles)
+        print("Total Weight:" + str(total_weight))
+
+        for (x, y, z, w) in new_particles:
+            self.data.append((x, y, z, w / total_weight))
 
         # Resample
         self.resample_particles()
@@ -384,7 +398,7 @@ def get_facing_wall(x, y, theta, map):
                 closest_wall = (x1, y1, x2, y2)
 
     if closest_wall:
-        return *closest_wall, min_distance
+        return closest_wall, min_distance
     return None
 
       
@@ -434,8 +448,16 @@ if __name__ == "__main__":
             wp = (destination_x * 100, destination_y * 100)
 
             particles, (oldpos, newpos) = robot.navigate_to_waypoint(wp, particles)
-            particles.measurement_update()
 
+            sensor_value = None
+            while sensor_value is None:
+                try:
+                    sensor_value = BP.get_sensor(BP.PORT_1)
+                except brickpi3.SensorError as error:
+                    print(f"Sensor error: {error}. Retrying...")
+
+            print("Sensor value: " + str(sensor_value))
+            particles.measurement_update(sensor_value, mymap)
                       
             canvas.drawLine((oldpos[0], oldpos[1], newpos[0], newpos[1]))
             
