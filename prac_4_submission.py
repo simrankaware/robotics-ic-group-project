@@ -388,6 +388,9 @@ class Robot:
 
             # particle update logic
             particles.perturb_particle_straight_line(distance)
+
+            particles.draw()
+            time.sleep(2)
             # print first ten particles
             print(particles.data[:10])
             sonar_value = self.get_sensor_reading()
