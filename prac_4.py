@@ -36,7 +36,7 @@ X_OFFSET = 200
 Y_OFFSET = 500
 
 # Constants for the likelihood function
-K = 0.01   # Constant added to Gaussian likelihood function to make it more robust
+K =  5 # Constant added to Gaussian likelihood function to make it more robust
 SIGMA = 2  # Standard deviation of the Gaussian likelihood function
 SONAR_PORT = BP.PORT_1  # Port for the sonar sensor
 
@@ -125,6 +125,7 @@ class Canvas:
 class Map:
     def __init__(self):
         self.walls = []
+        self.wall_dict = None
 
     def add_wall(self,wall):
         self.walls.append(wall)
@@ -143,9 +144,9 @@ class Particles:
     def __init__(self):
         self.n = 100
         
-        self.sd_e = 0.7  # s.d. for straight line
-        self.sd_f = 0.001  # s.d. for rotation during straight line motion
-        self.sd_g = 0.05 # s.d. for rotation
+        self.sd_e = 0.125  # s.d. for straight line
+        self.sd_f = 0.0125  # s.d. for rotation during straight line motion
+        self.sd_g = 0.025 # s.d. for rotation
         
         
         self.data = [(84, 30, 0, 1/self.n) for _ in range(self.n)]
@@ -190,8 +191,13 @@ class Particles:
             return 0
         
         closest_wall, m = output
+
         likelihood = gaussian_likelihood(z, m, SIGMA, K)
-        return likelihood   
+        return closest_wall, likelihood
+
+    def update_particle_weight(self, particle, new_weight):
+        (x, y, theta, _) = particle
+        return (x, y, theta, new_weight)   
 
     def measurement_update(self, z, map):
         """
@@ -200,23 +206,41 @@ class Particles:
 
         zeroes = 0
         weights = []
+        wall_hits = {}
         for i in range(len(self.data)):
             (x, y, theta, w) = self.data[i]
-            w = self.calculate_likelihood(x, y, theta, z, map)
+            output = self.calculate_likelihood(x, y, theta, z, map)
+            if output == 0:
+                zeroes += 1
+                continue
+            closest_wall, w = output
+            if closest_wall in map.wall_dict:
+                wall_name = map.wall_dict[closest_wall]
+                if wall_name in wall_hits:
+                    wall_hits[wall_name] += 1
+                else:
+                    wall_hits[wall_name] = 1
             if w == 0:
                 zeroes += 1
             weights.append(w)
              
+
+        print(f"Wall hits: {wall_hits}")
         if zeroes >= 50:
             print("Too many zeroes, not updating weights")
             pass
-        else:   
+        else:
+            # Update weights
             for i in range(len(weights)):
-                self.data[i] = (self.data[i][0], self.data[i][1], self.data[i][2], weights[i])
+                self.data[i] = self.update_particle_weight(self.data[i], weights[i])
         
-                # Normalize weights
-                total = sum([w for (_, _, _, w) in self.data])
-                self.data = [(x, y, theta, w/total) for (x, y, theta, w) in self.data]
+            # Normalize weights
+            total = sum([w for (_, _, _, w) in self.data])
+            self.data = [(x, y, theta, w/total) for (x, y, theta, w) in self.data]
+            print("Particles Normalized")
+            # Resample particles
+            self.resample_particles()
+            print("Particles Resampled, they should be closer togethher now")
         
     
     def resample_particles(self):
@@ -303,10 +327,8 @@ class Robot:
     def get_sensor_reading(self):   
         sonar_value = None
         while sonar_value is None:
-            time.sleep(0.5)
             try:
                 sonar_value = BP.get_sensor(SONAR_PORT)
-                print(f"Sensor value: {sonar_value}")
             except brickpi3.SensorError:
                 pass
         return sonar_value
@@ -340,7 +362,7 @@ class Robot:
     def navigate_to_waypoint(self, destination, particles, map, canvas):
 
 
-        margin = 3  # Define a margin of error in cm
+        margin = 1  # Define a margin of error in cm
         while abs(self.position[0] - destination[0]) > margin or abs(self.position[1] - destination[1]) > margin:
             angle_to_rotate, distance = self.angle_and_distance(destination)
         
@@ -366,7 +388,11 @@ class Robot:
 
             # particle update logic
             particles.perturb_particle_straight_line(distance)
+            # print first ten particles
+            print(particles.data[:10])
             sonar_value = self.get_sensor_reading()
+            print(f"Sensor value: {sonar_value + 15}")
+
             particles.measurement_update(sonar_value + 15, map)
             particles.draw()
 
@@ -408,6 +434,19 @@ if __name__ == "__main__":
     mymap.add_wall((210,0,0,0))        # h
     mymap.draw()
 
+
+    wall_dict = { (0,0,0,168): 'a', 
+                  (0,168,84,168): 'b', 
+                  (84,126,84,210): 'c', 
+                  (84,210,168,210): 'd', 
+                  (168,210,168,84): 'e', 
+                  (168,84,210,84): 'f', 
+                  (210,84,210,0): 'g', 
+                  (210,0,0,0): 'h' }
+    
+
+    mymap.wall_dict = wall_dict 
+
     particles = Particles()
     print(particles)
     
@@ -430,22 +469,13 @@ if __name__ == "__main__":
     for wp in waypoints:
     # while (True)
         try:
-            print("\nWAYPOINT ----------------")
+            print("\n\nWAYPOINT ----------------")
 
             (destination_x, destination_y) = wp
-            # destination_x = float(input("Enter x: "))
-            # destination_y = float(input("Enter y: "))
             print(f"waypoint destination ({destination_x}, {destination_y})")
             wp = (destination_x * 100, destination_y * 100)
-
             robot.navigate_to_waypoint(wp, particles, mymap, canvas)
-            # sonar_value = robot.get_sensor_reading
-            
-            # print(f"Sensor value: {sonar_value + 15}")
-            # particles.measurement_update(sonar_value + 15, mymap)
-            
             print("Current Position (calculated by particles): " + str(robot.position))
-
             BP.set_motor_dps(LEFT_MOTOR, 0)
             BP.set_motor_dps(RIGHT_MOTOR, 0)
             time.sleep(2)
